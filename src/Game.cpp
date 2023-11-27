@@ -19,6 +19,7 @@ Game::Game()
 	assert((imgInitResult & imgFlags) == imgFlags && "SDL_Image could not initialize!");
 
 	assets = new AssetManager();
+	board = new Board();
 }
 
 Game::~Game()
@@ -75,6 +76,22 @@ void Game::Input()
 			{
 				quitt = true;
 			}
+			if (event.key.keysym.sym == SDLK_DOWN)
+			{
+				if (board->GetNumOfPiecesInLine() > 3)
+				{
+					testCounter--;
+					board->CalculateNewBoardGrid(testCounter * testCounter);
+				}
+			}
+			if (event.key.keysym.sym == SDLK_UP)
+			{
+				if (board->GetNumOfPiecesInLine() < 20)
+				{
+					testCounter++;
+					board->CalculateNewBoardGrid(testCounter * testCounter);
+				}
+			}
 			break;
 		}
 	}
@@ -87,5 +104,5 @@ void Game::Update()
 void Game::Draw()
 {
 	RenderBackground();
-	DrawColoredSquare({ 0,0,0,255 }, { 150, 150 }, { WIDTH - 300, HEIGHT - 300 });
+	board->Draw();
 }

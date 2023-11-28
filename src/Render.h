@@ -18,3 +18,4 @@ void RenderBackground();
 void DrawSquareWithTexture(SDL_Texture* texture, Vector2 position, Vector2 size);
 void DrawColoredSquare(SDL_Color color, Vector2 position, Vector2 size);
 void DrawText(TTF_Font* font, SDL_Color fontColor, Vector2 position, const char* text);
+void DrawButtonText(TTF_Font* font, SDL_Color fontColor, const char* text, Vector2 position);

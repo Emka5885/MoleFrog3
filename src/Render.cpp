@@ -78,3 +78,21 @@ void DrawText(TTF_Font* font, SDL_Color fontColor, Vector2 position, const char*
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
 }
+
+void DrawButtonText(TTF_Font* font, SDL_Color fontColor, const char* text, Vector2 position)
+{
+	SDL_Surface* surf;
+	SDL_Texture* tex;
+	SDL_Rect rect;
+
+	surf = TTF_RenderText_Solid(font, text, fontColor);
+	tex = SDL_CreateTextureFromSurface(GetRenderer(), surf);
+	rect.x = position.x - surf->w / 2;
+	rect.y = position.y - surf->h / 2;
+	rect.w = surf->w;
+	rect.h = surf->h;
+	SDL_RenderCopy(GetRenderer(), tex, NULL, &rect);
+
+	SDL_FreeSurface(surf);
+	SDL_DestroyTexture(tex);
+}

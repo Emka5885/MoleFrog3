@@ -18,20 +18,21 @@ void Board::CalculateNewBoardGrid(int numberOfPiece)
 
 	numOfPiecesInLine = sqrt(numberOfPiece);
 	int pieceSize = board.w / numOfPiecesInLine - gridWidth * 2;
+	int offset = (board.h - (pieceSize + gridWidth * 2) * numOfPiecesInLine) / 2;
 
 	int counter = 0;
 	for (int i = 0; i < numOfPiecesInLine; i++)
 	{
 		for (int j = 0; j < numOfPiecesInLine; j++)
 		{
+			Vector2 position = { gridWidth + (pieceSize + gridWidth * 2) * j + offset, gridWidth + (pieceSize + gridWidth * 2) * i + offset };
 			if (counter < boardPieces.size())
 			{
-				boardPieces[i * numOfPiecesInLine + j]->SetNewPosition({ gridWidth + (pieceSize + gridWidth * 2) * j, gridWidth + (pieceSize + gridWidth * 2) * i });
+				boardPieces[i * numOfPiecesInLine + j]->SetNewPosition(position);
 				boardPieces[i * numOfPiecesInLine + j]->SetNewSize({ pieceSize, pieceSize });
 			}
 			else
 			{
-				Vector2 position = { gridWidth + (pieceSize + gridWidth * 2) * j, gridWidth + (pieceSize + gridWidth * 2) * i };
 				BoardPiece* b = new BoardPiece(position, { pieceSize, pieceSize });
 				boardPieces.emplace_back(b);
 			}

@@ -3,7 +3,7 @@
 #include "Definitions.h"
 #include "Render.h"
 
-Button::Button(Vector2 unhoverSize, SDL_Color unhoverColor, SDL_Color fontColor, const char* buttonText, TTF_Font* font, Vector2 unhoverPosition) : unhoverSize(unhoverSize), unhoverPosition(unhoverPosition), unhoverColor(unhoverColor), fontColor(fontColor), buttonText(buttonText), font(font)
+Button::Button(Vector2 unhoverSize, SDL_Color unhoverColor, SDL_Color fontColor, const char* buttonText, TTF_Font* font, Vector2 unhoverPosition, std::function<void()> callback) : unhoverSize(unhoverSize), unhoverPosition(unhoverPosition), unhoverColor(unhoverColor), fontColor(fontColor), buttonText(buttonText), font(font), OnClick(callback)
 {
 	collider = new Collider();
 
@@ -15,9 +15,6 @@ void Button::Init()
 	buttonType = unhovered;
 
 	zoom = DEFAULT_ZOOM;
-	outlineColor = { 0,0,0,255 };
-
-	outline = DEFAULT_OUTLINE;
 
 	unhoverColor.r = std::clamp(int(unhoverColor.r), 45, 255);
 	unhoverColor.g = std::clamp(int(unhoverColor.g), 45, 255);
@@ -84,20 +81,22 @@ void Button::ChangeHover()
 void Button::SetClicked(bool ifClicked)
 {
 	if (ifClicked)
+	{
 		buttonType = clicked;
+		OnClick;
+	}
 	else
 		buttonType = unhovered;
 }
 
 void Button::Draw()
 {
-	DrawColoredSquare(outlineColor, { GetCurrentPosition().x - outline / 2, GetCurrentPosition().y - outline / 2 }, { GetCurrentSize().x + outline, GetCurrentSize().y + outline });
 	DrawColoredSquare(GetCurrentColor(), { GetCurrentPosition().x, GetCurrentPosition().y }, { GetCurrentSize().x, GetCurrentSize().y });
 	if (buttonText != "")
 	{
 		Vector2 textPos;
-		textPos.x = GetCurrentPosition().x + GetCurrentSize().x / 2 + outline / 2;
-		textPos.y = GetCurrentPosition().y + GetCurrentSize().y / 2 + outline / 2;
+		textPos.x = GetCurrentPosition().x + GetCurrentSize().x / 2;
+		textPos.y = GetCurrentPosition().y + GetCurrentSize().y / 2;
 		DrawButtonText(font, fontColor, buttonText, textPos);
 	}
 }
@@ -128,12 +127,10 @@ Vector2& Button::GetCurrentSize()
 		return hoverSize;
 }
 
-bool Button::GetIfClicked(Vector2 mousePos)
+void Button::CheckIfClicked(Vector2 mousePos)
 {
 	if (collider->CheckCollisionOfObjectAndPoint(rect, mousePos))
 	{
 		SetClicked(true);
-		return true;
 	}
-	return false;
 }

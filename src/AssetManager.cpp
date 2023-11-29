@@ -14,7 +14,7 @@ void AssetManager::InitTextures()
 
 void AssetManager::InitFonts()
 {
-	LoadFont(FONT, FONT_PATH, 40);
+	LoadFont(FONT, FONT_PATH, 50);
 }
 
 void AssetManager::LoadTexture(const char* name, const char* fileName)

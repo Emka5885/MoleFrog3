@@ -5,15 +5,14 @@
 #include "Vector2.h"
 #include "AssetManager.h"
 #include <string>
+#include <functional>
 
 class Button
 {
 private:
 	int zoom;
-	int outline;
 	SDL_Rect rect;
 	SDL_Color fontColor;
-	SDL_Color outlineColor;
 	SDL_Color unhoverColor;
 	SDL_Color hoverColor;
 	SDL_Color clickColor;
@@ -24,11 +23,13 @@ private:
 	ButtonTypes buttonType;
 	const char* buttonText;
 
+	std::function<void()> OnClick;
+
 	TTF_Font* font;
 	Collider* collider;
 
 public:
-	Button(Vector2 unhoverSize, SDL_Color unhoverColor, SDL_Color fontColor, const char* buttonText, TTF_Font* font, Vector2 unhoverPosition);
+	Button(Vector2 unhoverSize, SDL_Color unhoverColor, SDL_Color fontColor, const char* buttonText, TTF_Font* font, Vector2 unhoverPosition, std::function<void()> callback);
 
 	void Init();
 	void CheckIfHovered(Vector2 mousePos);
@@ -41,5 +42,5 @@ public:
 	Vector2& GetCurrentPosition();
 	Vector2& GetCurrentSize();
 
-	bool GetIfClicked(Vector2 mousePos);
+	void CheckIfClicked(Vector2 mousePos);
 };

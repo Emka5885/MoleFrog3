@@ -20,6 +20,8 @@ Game::Game()
 
 	assets = new AssetManager();
 	board = new Board();
+	startButton = new Button({ 200,75 }, { 255,255,255,255 }, { 0,0,0,255 }, "Start", assets->GetFont(FONT), { WIDTH - 150, 50 }, [&]{Start();} );
+	stopButton = new Button({ 200,75 }, { 255,255,255,255 }, { 0,0,0,255 }, "Stop", assets->GetFont(FONT), { WIDTH - 150, 130 }, [&]{Stop();} );
 }
 
 Game::~Game()
@@ -62,6 +64,9 @@ void Game::Loop()
 
 void Game::Input()
 {
+	Vector2 mousePosition;
+	SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -86,15 +91,32 @@ void Game::Input()
 			}
 			if (event.key.keysym.sym == SDLK_UP)
 			{
-				if (board->GetNumOfPiecesInLine() < 20)
+				if (board->GetNumOfPiecesInLine() < 22)
 				{
 					testCounter++;
 					board->CalculateNewBoardGrid(testCounter * testCounter);
 				}
 			}
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT)
+			{
+				startButton->CheckIfClicked(mousePosition);
+				stopButton->CheckIfClicked(mousePosition);
+			}
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_LEFT)
+			{
+				startButton->SetClicked(false);
+				stopButton->SetClicked(false);
+			}
+			break;
 		}
 	}
+
+	startButton->CheckIfHovered(mousePosition);
+	stopButton->CheckIfHovered(mousePosition);
 }
 
 void Game::Update()
@@ -105,4 +127,14 @@ void Game::Draw()
 {
 	RenderBackground();
 	board->Draw();
+	startButton->Draw();
+	stopButton->Draw();
+}
+
+void Game::Start()
+{
+}
+
+void Game::Stop()
+{
 }
